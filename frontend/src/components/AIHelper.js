@@ -18,7 +18,7 @@ function AIHelper({ code, language, questionContext }) {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/ai-help", {
+      const response = await axios.post("https://ai-collab-backend-t7iv.onrender.com/api/ai-help", {
         code: code,
         language: language,
         questionContext: questionContext,

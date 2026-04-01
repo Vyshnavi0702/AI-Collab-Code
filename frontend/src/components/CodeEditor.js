@@ -50,7 +50,7 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
     setTestResults(null);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/execute", {
+      const response = await axios.post("https://ai-collab-backend-t7iv.onrender.com/api/execute", {
         code: sharedCode,
         language: sharedLanguage,
         testCases: problem.testCases

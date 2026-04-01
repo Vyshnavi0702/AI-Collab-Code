@@ -33,7 +33,7 @@ function Room() {
     });
 
     // Fetch problems from our MongoDB backend API
-    axios.get("http://localhost:5000/api/questions")
+    axios.get("https://ai-collab-backend-t7iv.onrender.com/api/questions")
       .then(res => {
         setProblems(res.data);
         if (res.data.length > 0) setActiveProblem(res.data[0]);
