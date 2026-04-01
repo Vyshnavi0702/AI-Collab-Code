@@ -19,11 +19,11 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
 
   useEffect(() => {
     if (problem && problem.baseCode && problem.baseCode[sharedLanguage]) {
-       if (sharedCode === "// Loading..." || sharedCode === "// Start coding here" || !sharedCode) {
-           setSharedCode(problem.baseCode[sharedLanguage]);
-       }
+      if (sharedCode === "// Loading..." || sharedCode === "// Start coding here" || !sharedCode) {
+        setSharedCode(problem.baseCode[sharedLanguage]);
+      }
     }
-  }, [problem, sharedLanguage]);
+  }, [problem, sharedLanguage, sharedCode, setSharedCode]);
 
   const handleChange = (value) => {
     setSharedCode(value);
@@ -37,9 +37,9 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
     const newLang = e.target.value;
     setSharedLanguage(newLang);
     if (problem && problem.baseCode && problem.baseCode[newLang]) {
-       const templateCode = problem.baseCode[newLang];
-       setSharedCode(templateCode);
-       socket.emit("code_change", { room: roomId, code: templateCode });
+      const templateCode = problem.baseCode[newLang];
+      setSharedCode(templateCode);
+      socket.emit("code_change", { room: roomId, code: templateCode });
     }
   };
 
@@ -55,13 +55,13 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
         language: sharedLanguage,
         testCases: problem.testCases
       });
-      
+
       const { allPassed, results } = response.data;
       setTestResults(results);
       if (allPassed) {
-         setOutput("✅ Accepted! All test cases passed.");
+        setOutput("✅ Accepted! All test cases passed.");
       } else {
-         setOutput("❌ Wrong Answer. Some test cases failed.");
+        setOutput("❌ Wrong Answer. Some test cases failed.");
       }
     } catch (error) {
       console.error(error);
@@ -77,7 +77,7 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
       {/* Editor Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px", background: "#333", color: "white" }}>
         <div>
-          <label style={{marginRight: "10px", fontSize: "14px"}}>Language:</label>
+          <label style={{ marginRight: "10px", fontSize: "14px" }}>Language:</label>
           <select value={sharedLanguage} onChange={handleLanguageChange} style={{ padding: "4px", borderRadius: "4px", background: "#444", color: "white", border: "1px solid #555" }}>
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
@@ -86,16 +86,16 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
           </select>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
-          <button 
-             onClick={runCode} 
-             disabled={isRunning}
-             style={{ background: isRunning ? "#555" : "#0e639c", color: "white", padding: "6px 16px", border: "none", borderRadius: "4px", cursor: isRunning ? "not-allowed" : "pointer", fontWeight: "bold" }}>
+          <button
+            onClick={runCode}
+            disabled={isRunning}
+            style={{ background: isRunning ? "#555" : "#0e639c", color: "white", padding: "6px 16px", border: "none", borderRadius: "4px", cursor: isRunning ? "not-allowed" : "pointer", fontWeight: "bold" }}>
             {isRunning ? "Running..." : "Run Code"}
           </button>
-          <button 
-             onClick={runCode} 
-             disabled={isRunning}
-             style={{ background: isRunning ? "#555" : "#2ea043", color: "white", padding: "6px 16px", border: "none", borderRadius: "4px", cursor: isRunning ? "not-allowed" : "pointer", fontWeight: "bold" }}>
+          <button
+            onClick={runCode}
+            disabled={isRunning}
+            style={{ background: isRunning ? "#555" : "#2ea043", color: "white", padding: "6px 16px", border: "none", borderRadius: "4px", cursor: isRunning ? "not-allowed" : "pointer", fontWeight: "bold" }}>
             Submit
           </button>
         </div>
@@ -121,21 +121,21 @@ function CodeEditor({ problem, roomId, sharedCode, setSharedCode, sharedLanguage
           {output}
         </div>
         {testResults && (
-           <div style={{marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px"}}>
-               {testResults.map((tr, idx) => (
-                  <div key={idx} style={{ padding: "10px", borderRadius: "6px", background: tr.passed ? "rgba(46,160,67,0.15)" : "rgba(248,81,73,0.15)", border: `1px solid ${tr.passed ? "#2ea043" : "#f85149"}` }}>
-                     <div style={{fontWeight: "bold", color: tr.passed ? "#3fb950" : "#ff7b72"}}>
-                        Test Case {tr.testCase}: {tr.passed ? "Passed" : "Failed"}
-                     </div>
-                     <div style={{fontSize: "13px", marginTop: "5px", wordBreak: "break-all"}}>
-                        <strong>Input:</strong> {tr.input}<br/>
-                        <strong>Expected:</strong> {tr.expectedOutput}<br/>
-                        <strong>Output:</strong> {tr.actualOutput}
-                        {tr.stderr && <span style={{color: "#ff7b72"}}><br/><strong>Error:</strong> {tr.stderr}</span>}
-                     </div>
-                  </div>
-               ))}
-           </div>
+          <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
+            {testResults.map((tr, idx) => (
+              <div key={idx} style={{ padding: "10px", borderRadius: "6px", background: tr.passed ? "rgba(46,160,67,0.15)" : "rgba(248,81,73,0.15)", border: `1px solid ${tr.passed ? "#2ea043" : "#f85149"}` }}>
+                <div style={{ fontWeight: "bold", color: tr.passed ? "#3fb950" : "#ff7b72" }}>
+                  Test Case {tr.testCase}: {tr.passed ? "Passed" : "Failed"}
+                </div>
+                <div style={{ fontSize: "13px", marginTop: "5px", wordBreak: "break-all" }}>
+                  <strong>Input:</strong> {tr.input}<br />
+                  <strong>Expected:</strong> {tr.expectedOutput}<br />
+                  <strong>Output:</strong> {tr.actualOutput}
+                  {tr.stderr && <span style={{ color: "#ff7b72" }}><br /><strong>Error:</strong> {tr.stderr}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
